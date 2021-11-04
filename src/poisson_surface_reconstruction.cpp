@@ -49,6 +49,11 @@ void poisson_surface_reconstruction(
   Eigen::VectorXd g = Eigen::VectorXd::Zero(nx * ny * nz);
   M_DEBUG("extent:" << extent << " h:" << h << " nx:" << nx << " ny:" << ny << " nz:" << nz << " x.rows=" << x.rows())
 
+  // Gradients on a regular grid
+  Eigen::SparseMatrix<double> Dx, Dy, Dz;
+  fd_partial_derivative(nx, ny, nz, h, 0, Dx);
+  fd_partial_derivative(nx, ny, nz, h, 0, Dy);
+  fd_partial_derivative(nx, ny, nz, h, 0, Dz);
   ////////////////////////////////////////////////////////////////////////////
   // Add your code here
   ////////////////////////////////////////////////////////////////////////////
