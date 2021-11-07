@@ -8,9 +8,19 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
+#include <fd_partial_derivative.h>
+
+using namespace std;
+using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
+  // SparseMatrix<double> D;
+  // fd_partial_derivative(3, 3, 3, 0.1, 0, D);
+  // fd_partial_derivative(3, 3, 3, 0.1, 1, D);
+  // fd_partial_derivative(3, 3, 3, 0.1, 2, D);
+  // cout << D.toDense() << endl;
+
   // Load in points + normals from .pwn file
   Eigen::MatrixXd P, N;
   {
@@ -41,7 +51,6 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd V;
   Eigen::MatrixXi F;
   poisson_surface_reconstruction(P, N, V, F);
-  return 0;
 
   // Create a libigl Viewer object to toggle between point cloud and mesh
   igl::opengl::glfw::Viewer viewer;

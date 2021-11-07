@@ -5,6 +5,7 @@
 #include "fd_interpolate.h"
 #include "fd_grad.h"
 #include "fd_partial_derivative.h"
+#include <Eigen/IterativeLinearSolvers>
 
 void poisson_surface_reconstruction(
     const Eigen::MatrixXd &P,
@@ -12,6 +13,8 @@ void poisson_surface_reconstruction(
     Eigen::MatrixXd &V,
     Eigen::MatrixXi &F)
 {
+
+  using namespace Eigen;
   ////////////////////////////////////////////////////////////////////////////
   // Construct FD grid, CONGRATULATIONS! You get this for free!
   ////////////////////////////////////////////////////////////////////////////
@@ -49,16 +52,23 @@ void poisson_surface_reconstruction(
   Eigen::VectorXd g = Eigen::VectorXd::Zero(nx * ny * nz);
   M_DEBUG("extent:" << extent << " h:" << h << " nx:" << nx << " ny:" << ny << " nz:" << nz << " x.rows=" << x.rows())
 
-  // Gradients on a regular grid
-  Eigen::SparseMatrix<double> Dx, Dy, Dz;
-  fd_partial_derivative(nx, ny, nz, h, 0, Dx);
-  fd_partial_derivative(nx, ny, nz, h, 0, Dy);
-  fd_partial_derivative(nx, ny, nz, h, 0, Dz);
   ////////////////////////////////////////////////////////////////////////////
   // Add your code here
   ////////////////////////////////////////////////////////////////////////////
   Eigen::SparseMatrix<double> W;
   fd_interpolate(nx, ny, nz, h, corner, P, W);
+  auto v = W.transpose() * N;
+  M_DEBUG("P: " << P.rows() << " N: " << N.rows()
+                << " W: " << W.rows() << ", " << W.cols()
+                << " v: " << v.rows() << ", " << v.cols())
+
+  Eigen::SparseMatrix<double> G;
+  fd_grad(nx, ny, nz, h, G);
+  M_DEBUG("Grad: " << G.rows() << ", " << G.cols())
+  Eigen::BiCGSTAB<SparseMatrix<double>> solver;
+  solver.compute(G.transpose() * G);
+  G *v;
+  // g = solver.solve(G.transpose() * v);
 
   ////////////////////////////////////////////////////////////////////////////
   // Run black box algorithm to compute mesh from implicit function: this
