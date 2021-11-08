@@ -17,8 +17,8 @@ void fd_grad(
   // Gradients on a regular grid
   Eigen::SparseMatrix<double> Dx, Dy, Dz;
   fd_partial_derivative(nx, ny, nz, h, 0, Dx);
-  fd_partial_derivative(nx, ny, nz, h, 0, Dy);
-  fd_partial_derivative(nx, ny, nz, h, 0, Dz);
+  fd_partial_derivative(nx, ny, nz, h, 1, Dy);
+  fd_partial_derivative(nx, ny, nz, h, 2, Dz);
   M_DEBUG("gradients on regular grid")
 
   egl::cat(1, Dx, Dy, Dz, G);

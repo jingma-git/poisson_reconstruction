@@ -18,6 +18,7 @@ void fd_interpolate(
   std::vector<Triplet<double>> coeff;
   auto ind = [&nx, &ny, &nz](int i, int j, int k)
   {
+    M_DEBUG(i << ", " << j << ", " << k << ", " << i + nx * (j + k * ny))
     return i + nx * (j + k * ny);
   };
 
@@ -37,7 +38,7 @@ void fd_interpolate(
     coeff.emplace_back(idx, ind(i + 1, j + 1, k), p[0] * p[1] * q[2]);
     coeff.emplace_back(idx, ind(i, j + 1, k + 1), q[0] * p[1] * p[2]);
     coeff.emplace_back(idx, ind(i + 1, j + 1, k + 1), p[0] * p[1] * p[2]);
-    // M_DEBUG(idx << " ijk=" << ijk << " p:" << p)
+    M_DEBUG(idx << " ijk=" << ijk << " p:" << p)
   }
 
   W.setFromTriplets(coeff.begin(), coeff.end());

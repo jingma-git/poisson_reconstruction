@@ -22,3 +22,4 @@ target_link_libraries(core igl::core igl::opengl igl::opengl_glfw )
 
 add_executable(main "main.cpp")
 target_link_libraries(main core igl::core igl::opengl igl::opengl_glfw )
+

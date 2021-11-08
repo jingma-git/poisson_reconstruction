@@ -1,6 +1,8 @@
+#include "make_cube.h"
 #include "poisson_surface_reconstruction.h"
 #include <igl/list_to_matrix.h>
 #include <igl/opengl/glfw/Viewer.h>
+#include <igl/per_vertex_normals.h>
 #include <Eigen/Core>
 #include <string>
 #include <iostream>
@@ -15,12 +17,6 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-  // SparseMatrix<double> D;
-  // fd_partial_derivative(3, 3, 3, 0.1, 0, D);
-  // fd_partial_derivative(3, 3, 3, 0.1, 1, D);
-  // fd_partial_derivative(3, 3, 3, 0.1, 2, D);
-  // cout << D.toDense() << endl;
-
   // Load in points + normals from .pwn file
   Eigen::MatrixXd P, N;
   {
@@ -45,6 +41,10 @@ int main(int argc, char *argv[])
     assert(D.cols() == 6 && "pwn file should have 6 columns");
     P = D.leftCols(3);
     N = D.rightCols(3);
+
+    // MatrixXi F;
+    // egl::make_cube(P, F);
+    // igl::per_vertex_normals(P, F, N);
   }
 
   // Reconstruct mesh
